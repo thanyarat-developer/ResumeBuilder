@@ -1,4 +1,4 @@
-# ⚠️ 3 บรรทัดนี้ต้องอยู่บนสุดเสมอ เพื่อแก้ปัญหาฐานข้อมูลบน Streamlit Cloud
+# ⚠️ 3 บรรทัดนี้ต้องอยู่บนสุดเสมอ
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
@@ -8,21 +8,40 @@ import os
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 
+# ดึงสคริปต์ ETL ของเรามาใช้งาน
+import etl_pipeline 
+
 # ================= การตั้งค่าหน้าเว็บ =================
 st.set_page_config(page_title="Shutter Spec AI", page_icon="🏭", layout="centered")
 
-# ================= โหลดโมเดลและฐานข้อมูล =================
+# ================= การจัดการ Path และ Database =================
 DB_DIR = "./chroma_db"
 EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+# ให้หาไฟล์ PDF ที่หน้าสุด (ถ้าคุณเอาไฟล์ PDF ไปไว้ในโฟลเดอร์ data ก็เปลี่ยนเป็น "data/ชื่อไฟล์.pdf")
+PDF_PATH = "แคตตาล็อค 593-2562 (ใหม่).pdf" 
+
+# [ระบบสร้างฐานข้อมูลอัตโนมัติบน Cloud]
+if not os.path.exists(DB_DIR):
+    st.warning("⚠️ ไม่พบฐานข้อมูล! ระบบกำลังสร้าง Knowledge Base อัตโนมัติ (อาจใช้เวลา 2-3 นาที โปรดอย่ารีเฟรชหน้าจอ)...")
+    with st.spinner("AI กำลังอ่านและสกัดตารางสเปกจากไฟล์แคตตาล็อก..."):
+        try:
+            # สั่งให้รันฟังก์ชันจากไฟล์ etl_pipeline.py บนเซิร์ฟเวอร์
+            extracted_data = etl_pipeline.extract_data_from_pdf(PDF_PATH)
+            if extracted_data:
+                etl_pipeline.build_vector_database(extracted_data)
+                st.success("🎉 สร้างฐานข้อมูลสำเร็จ! กำลังโหลดแอปพลิเคชัน...")
+                st.rerun() # รีสตาร์ทแอป 1 รอบเพื่อให้มันใช้ DB ใหม่
+            else:
+                st.error("❌ ไม่สามารถสกัดข้อมูลจาก PDF ได้")
+                st.stop()
+        except Exception as e:
+            st.error(f"❌ เกิดข้อผิดพลาดในการสร้างฐานข้อมูล: {e}")
+            st.stop()
 
 @st.cache_resource
 def load_database():
-    """โหลด Database แค่ครั้งเดียวเพื่อความรวดเร็ว"""
-    if not os.path.exists(DB_DIR):
-        return None
     embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
-    vectorstore = Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
-    return vectorstore
+    return Chroma(persist_directory=DB_DIR, embedding_function=embeddings)
 
 vectorstore = load_database()
 
@@ -30,22 +49,15 @@ vectorstore = load_database()
 st.title("🏭 ระบบค้นหาสเปกประตูเหล็กม้วน (AI RAG)")
 st.caption("พิมพ์ถามคำถามเกี่ยวกับสเปกสินค้า เช่น ความหนา, น้ำหนัก, หรือมอเตอร์")
 
-if vectorstore is None:
-    st.error("⚠️ ไม่พบฐานข้อมูล กรุณารันไฟล์ `etl_pipeline.py` เพื่อสร้างฐานข้อมูลก่อนครับ")
-    st.stop()
-
-# ช่องให้ผู้ใช้พิมพ์คำถาม
 query = st.text_input("💬 สอบถามข้อมูลสเปกสินค้า:", placeholder="เช่น ประตูทนไฟกันไฟได้นานกี่ชั่วโมง?")
 
 if query:
     with st.spinner("AI กำลังค้นหาข้อมูลจากแคตตาล็อก..."):
-        # ค้นหาข้อมูลที่ตรงกันมากที่สุด 3 อันดับแรก
         results = vectorstore.similarity_search(query, k=3)
-        
         if results:
             st.success("พบข้อมูลที่เกี่ยวข้องดังนี้:")
             for i, res in enumerate(results):
-                with st.expander(f"📌 อ้างอิง {i+1} (จากหน้า {res.metadata['page']} - ประเภท: {res.metadata['data_type']})", expanded=(i==0)):
+                with st.expander(f"📌 อ้างอิง {i+1} (หน้า {res.metadata['page']} - {res.metadata['data_type']})", expanded=(i==0)):
                     st.markdown(res.page_content)
                     st.caption(f"แหล่งที่มา: {res.metadata['source']}")
         else:
