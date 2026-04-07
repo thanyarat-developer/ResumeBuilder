@@ -14,7 +14,7 @@ PDF_PATH = "catalog.pdf"
 if not os.path.exists(DB_DIR):
     st.warning("⚠️ ไม่พบฐานข้อมูล FAISS! ระบบกำลังสร้าง Knowledge Base อัตโนมัติ (อาจใช้เวลา 2-3 นาที)...")
     
-    # ---------------- 🚨 โค้ดส่วนนักสืบ (Debug) 🚨 ----------------
+    # ---------------- Debug ----------------
     if not os.path.exists(PDF_PATH):
         st.error(f"❌ ค้นหาไฟล์ชื่อ '{PDF_PATH}' ไม่เจอครับ!")
         st.info(f"📂 ไฟล์ทั้งหมดที่เซิร์ฟเวอร์มองเห็นตอนนี้คือ: {os.listdir('.')}")
@@ -23,7 +23,7 @@ if not os.path.exists(DB_DIR):
         st.stop()
     # -----------------------------------------------------------
     
-    with st.spinner("AI กำลังอ่านและสกัดตารางสเปก..."):
+    with st.spinner("AI กำลังอ่านตารางสเปก..."):
         try:
             extracted_data = etl_pipeline.extract_data_from_pdf(PDF_PATH)
             if extracted_data:
