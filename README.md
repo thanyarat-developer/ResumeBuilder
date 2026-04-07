@@ -14,7 +14,7 @@
 
 ```mermaid
 graph TD
-    A[ข้อมูล: ไฟล์ PDF (ต้องเป็นข้อความไม่ใช่รูปภาพ)] --> B{Data Extraction}
+    A[ข้อมูล: ไฟล์ PDF ต้องเป็นข้อความไม่ใช่รูปภาพ] --> B{Data Extraction}
     B -->|ถอดข้อความ| C[pdfplumber]
     B -->|ถอดตาราง| D[Camelot]
     
