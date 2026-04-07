@@ -22,7 +22,7 @@ if not os.path.exists(DB_DIR):
                 st.success("สร้างฐานข้อมูลสำเร็จ! กำลังโหลดแอปพลิเคชัน...")
                 st.rerun()
             else:
-                st.error("❌ ไม่สามารถสกัดข้อมูลจาก PDF ได้")
+                st.error("❌ ไม่สามารถถอดข้อมูลจาก PDF ได้")
                 st.stop()
         except Exception as e:
             st.error(f"❌ เกิดข้อผิดพลาดในการสร้างฐานข้อมูล: {e}")
