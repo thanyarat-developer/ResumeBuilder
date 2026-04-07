@@ -1,4 +1,4 @@
-# 🏭 Automated Product Knowledge Base (RAG Pipeline)
+# Automated Product Knowledge Base (RAG Pipeline)
 
 **ระบบถาม-ตอบข้อมูลสเปกสินค้าอัจฉริยะวัสดุก่อสร้าง**
 
