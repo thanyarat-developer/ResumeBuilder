@@ -4,9 +4,5 @@ env/
 __pycache__/
 *.pyc
 
-# Data source (ไม่เอาไฟล์ PDF ต้นฉบับขึ้นเว็บ)
-data/
-*.pdf
-
 # OS generated files
 .DS_Store
