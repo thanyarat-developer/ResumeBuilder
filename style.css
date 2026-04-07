@@ -1,52 +1,38 @@
 :root {
     --primary: #2563eb;
     --dark: #1e293b;
-    --gray: #64748b;
     --light: #f8fafc;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e2e8f0; margin: 0; color: var(--dark); }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eaeff5; margin: 0; padding: 20px; }
+.app-container { max-width: 700px; margin: auto; }
 
-.app-container { max-width: 800px; margin: auto; padding: 15px; }
 header { text-align: center; margin-bottom: 20px; }
-header h1 { color: var(--primary); margin-bottom: 5px; }
+header h1 { color: var(--primary); margin: 0; }
 
-.card { background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; shadow: 0 4px 6px rgba(0,0,0,0.05); }
-.card h3 { margin-top: 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+.card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.card h3 { margin-top: 0; font-size: 1rem; color: var(--dark); }
 
 input, textarea {
-    width: 100%; padding: 12px; margin-top: 8px;
-    border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem;
+    width: 100%; padding: 12px; margin-top: 10px;
+    border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;
 }
 
 .btn-download {
     width: 100%; padding: 16px; background: var(--primary); color: white;
-    border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold;
-    cursor: pointer; transition: 0.3s; margin-top: 10px;
+    border: none; border-radius: 12px; font-size: 1.1rem; font-weight: bold;
+    cursor: pointer; transition: 0.2s;
 }
+.btn-download:active { transform: scale(0.98); }
 
-/* ส่วนของ Resume (กระดาษ A4 จำลอง) */
+/* พื้นที่กระดาษ PDF */
 .resume-paper {
-    background: white; width: 100%; min-height: 500px; padding: 40px;
-    margin-top: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    background: white; padding: 40px; margin-top: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 4px;
 }
-
-.resume-header { border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
-.resume-header h1 { margin: 0; color: var(--dark); text-transform: uppercase; }
-.sub-title { color: var(--primary); font-weight: bold; font-size: 1.2rem; margin: 5px 0 0 0; }
-
-.section-title { 
-    background: #f1f5f9; padding: 5px 10px; font-weight: bold; 
-    margin-top: 20px; border-left: 5px solid var(--primary); 
-}
-
-.text-block { line-height: 1.6; white-space: pre-line; margin-top: 10px; }
-
-.skills-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-.skill-item { background: #e0e7ff; color: var(--primary); padding: 4px 12px; border-radius: 15px; font-size: 0.9rem; }
-
-/* ทำให้รองรับหน้าจอมือถือ */
-@media (max-width: 600px) {
-    .resume-paper { padding: 20px; font-size: 0.9rem; }
-}
+.resume-header { border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+.sub-title { color: var(--primary); font-weight: bold; margin-top: 5px; }
+.section-title { background: #f1f5f9; padding: 5px 10px; font-weight: bold; margin-top: 15px; border-left: 4px solid var(--primary); }
+.text-block { line-height: 1.6; white-space: pre-line; }
+.skills-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.skill-item { background: #dbeafe; color: var(--primary); padding: 3px 10px; border-radius: 5px; font-size: 0.85rem; }
